@@ -6,12 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SocketIO</title>
 
+    <script src="konva/konva.js"></script>
+
 </head>
 <body>
 
+
     <h1>Get Response</h1>
     <p id="value"></p>
+    <div id="container">
+        
+    </div>
 
+
+    <script src="mykonva.js"></script>
     <script src="socket.io/socket.io.js"></script>
     <script>
         const socket = io();
@@ -21,7 +29,10 @@
             /* Listening for a message from the socket. When it receives a message, it writes it to a file. */
             socket.on("message", function(msg) {
                 console.log("messages:", msg);
-                
+
+                var mydata = document.getElementById("value");
+                mydata.innerHTML = msg;
+
             });
 
         })
