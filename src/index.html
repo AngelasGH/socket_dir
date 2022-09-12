@@ -6,20 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SocketIO</title>
 
-    <script src="konva/konva.js"></script>
+    <script src="https://unpkg.com/konva@8/konva.min.js"></script>
 
 </head>
 <body>
-
+    
 
     <h1>Get Response</h1>
-    <p id="value"></p>
+
     <div id="container">
-        
+
     </div>
 
+    <p id="value"></p>
 
-    <script src="mykonva.js"></script>
     <script src="socket.io/socket.io.js"></script>
     <script>
         const socket = io();
@@ -30,9 +30,35 @@
             socket.on("message", function(msg) {
                 console.log("messages:", msg);
 
-                var mydata = document.getElementById("value");
-                mydata.innerHTML = msg;
 
+                let sp = msg.replace(/[[(' ')]]*/g,'');
+                console.log(sp);
+                let sp2 = sp.split(',').map(str => {
+                    if(isNaN(str)){
+                        return str;
+                    }else {
+                        return Number(str);
+                    }
+                    
+                  });
+
+                //slice into chunks
+
+                function sliceIntoChunks(arr, chunkSize) {
+                    const res = [];
+                    for (let i = 0; i < arr.length; i += chunkSize) {
+                        const chunk = arr.slice(i, i + chunkSize);
+                        res.push(chunk);
+                        console.log("chunk:"+chunk);
+                    }
+                    return res;
+                }
+                
+                let newValue = sliceIntoChunks(sp2, 5)
+                console.log(newValue);
+
+                var mydata = document.getElementById("value");
+                mydata.innerHTML = newValue;
             });
 
         })
@@ -41,7 +67,29 @@
             console.log("A user disconnected...");
         })
 
-    </script> 
+        //------This is for Konva Application/Implementation------//
+        let width = window.innerWidth;
+        let height = window.innerHeight;
 
+        let stage = new Konva.Stage({
+            container: 'container',
+            width: width,
+            height: height
+        });
+
+        let layer = new Konva.Layer();
+
+        let rect = new Konva.Rect({
+            x: 123,
+            y: 234,
+            width: 50,
+            height: 30,
+            fill: 'pink'
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+    </script> 
 </body>
 </html>
